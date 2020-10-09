@@ -15,7 +15,7 @@ log() {
 setup_packages() {
   log ${FUNCNAME[0]}
 
-  local PACKAGES="git vim"
+  local PACKAGES="git tig tree vim"
   if which apt >/dev/null; then
     sudo apt install -y $PACKAGES
   else
