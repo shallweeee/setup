@@ -84,9 +84,18 @@ change_branch() {
   git checkout -b "$(uname -n)"
 }
 
+setup_tmuxconf() {
+  log "${FUNCNAME[0]}"
+
+  cat << EOF > ~/.tmux.conf
+set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+EOF
+}
+
 setup_packages
 setup_bashrc
 setup_vimrc
 setup_vimplug
 setup_gitconfig
 change_branch
+setup_tmuxconf
