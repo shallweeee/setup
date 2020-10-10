@@ -1,15 +1,25 @@
 #! /bin/bash
 
-BASH_LOADER='
-[ -f ~/bin/bashrc ] && . ~/bin/bashrc'
-
-VIM_LOADER='
-if filereadable(expand("~/bin/vimrc"))
-  so ~/bin/vimrc
-endif'
+BASHRC_LOADER='source ~/bin/bashrc'
+INPUTRC_LOADER='$include ~/bin/inputrc'
+TMUXCONF_LOADER='source ~/bin/tmux.conf'
+VIMRC_LOADER='source ~/bin/vimrc'
 
 log() {
   echo -e "\n* $*"
+}
+
+setup() {
+  local CONFIG="$HOME/$1"
+  local LOADER="$2"
+  local COMMENT="$3"
+  [ -z "$COMMENT" ] && COMMENT='#'
+
+  [ -f "$CONFIG" ] && sed 's/'"$COMMENT"'.*//' "$CONFIG" | grep -q "$LOADER" && return
+
+  log "$1"
+  [ -f "$CONFIG" ] && echo >> "$CONFIG"
+  echo "$LOADER" >> "$CONFIG"
 }
 
 setup_packages() {
@@ -21,20 +31,6 @@ setup_packages() {
   else
     echo "Unknown package manager. Please install $PACKAGES manually"
   fi
-}
-
-setup_bashrc() {
-  grep -q '~/bin/bashrc' ~/.bashrc 2>/dev/null && return
-
-  log "${FUNCNAME[0]}"
-  echo "$BASH_LOADER" >> ~/.bashrc
-}
-
-setup_vimrc() {
-  grep -q '~/bin/vimrc' ~/.vimrc 2>/dev/null && return
-
-  log "${FUNCNAME[0]}"
-  echo "$VIM_LOADER" >> ~/.vimrc
 }
 
 setup_vimplug() {
@@ -84,18 +80,11 @@ change_branch() {
   git checkout -b "$(uname -n)"
 }
 
-setup_tmuxconf() {
-  log "${FUNCNAME[0]}"
-
-  cat << EOF > ~/.tmux.conf
-set -g terminal-overrides 'xterm*:smcup@:rmcup@'
-EOF
-}
-
 setup_packages
-setup_bashrc
-setup_vimrc
+setup .bashrc "$BASHRC_LOADER"
+setup .inputrc "$INPUTRC_LOADER"
+setup .tmux.conf "$TMUXCONF_LOADER"
+setup .vimrc "$VIMRC_LOADER" '"'
 setup_vimplug
 setup_gitconfig
 change_branch
-setup_tmuxconf
