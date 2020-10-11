@@ -23,7 +23,7 @@ setup() {
 }
 
 setup_packages() {
-  log ${FUNCNAME[0]}
+  log $FUNCNAME
 
   local PACKAGES="git tig tree vim"
   if which apt >/dev/null; then
@@ -36,45 +36,41 @@ setup_packages() {
 setup_vimplug() {
   [ -f ~/.vim/autoload/plug.vim ] && return
 
-  log "${FUNCNAME[0]}"
+  log $FUNCNAME
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   vim -c ':PlugInstall' -c ':qa'
 }
 
-set_git_config() {
-  local tmp=`git config --global $1`
-  if [ ! -z "$tmp" ]; then
-    echo "  $1 already has '$tmp'"
-    return
-  fi
+git_config() {
+  value=$(git config --global "$1")
 
-  local value="$2"
-  if [ -z "$value" -o "${value:0:5}" = Enter ]; then
-    read -p "Enter ${1#*.} for git(Enter to skip): " value
-  fi
+  if [ -z "$2" ]; then
+    log ${FUNCNAME} $1
 
-  if [ -z "$value" ]; then
-    echo "  skipped"
+    prompt="Enter new value to replace '$value': "
+    [ -z "$value" ] && prompt="Enter value for $1: "
+
+    read -p "$prompt" value
+    [ -z "$value" ] && return
   else
-    git config --global $1 "$value"
+    [ x"$value" = x"$2" ] && return
+    value="$2"
+
+    log $FUNCNAME $1
   fi
+
+  git config --global --add "$1" "$value"
 }
 
 setup_gitconfig() {
-  log "${FUNCNAME[0]}"
-
-  set_git_config alias.br branch
-  set_git_config alias.ci commit
-  set_git_config alias.co checkout
-  set_git_config alias.st status
-
-  set_git_config user.email "Enter your email for git(Enter to skip): "
-  set_git_config user.name "Enter your name for git(Enter to skip): "
+  git_config user.email
+  git_config user.name
+  git_config include.path $HOME/bin/gitconfig
 }
 
 change_branch() {
-  log "${FUNCNAME[0]}"
+  log $FUNCNAME
 
   cd "$(dirname $0)"
   git checkout -b "$(uname -n)"
