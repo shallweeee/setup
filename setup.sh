@@ -4,9 +4,14 @@ BASHRC_LOADER='source ~/bin/bashrc'
 INPUTRC_LOADER='$include ~/bin/inputrc'
 TMUXCONF_LOADER='source ~/bin/tmux.conf'
 VIMRC_LOADER='source ~/bin/vimrc'
+SUDO=
 
 log() {
   echo -e "\n* $*"
+}
+
+check_sudo() {
+  [ $(id -u) -eq 0 ] && SUDO= || SUDO=sudo
 }
 
 setup() {
@@ -27,10 +32,21 @@ setup_packages() {
 
   local PACKAGES="git tig tree vim"
   if which apt >/dev/null; then
-    sudo apt install -y $PACKAGES
+    #$SUDO apt update
+    $SUDO apt install -y $PACKAGES
   else
     echo "Unknown package manager. Please install $PACKAGES manually"
   fi
+}
+
+setup_alternatives() {
+  which update-alternatives >/dev/null || return
+
+  local items=('editor /usr/bin/vim.basic')
+  for tmp in "${items[@]}"; do
+    local item=($tmp)
+    [ -f ${item[1]} ] && $SUDO update-alternatives --set ${item[0]} ${item[1]}
+  done
 }
 
 setup_vimplug() {
@@ -76,7 +92,9 @@ change_branch() {
   git checkout -b "$(uname -n)"
 }
 
+check_sudo
 setup_packages
+setup_alternatives
 setup .bashrc "$BASHRC_LOADER"
 setup .inputrc "$INPUTRC_LOADER"
 setup .tmux.conf "$TMUXCONF_LOADER"
