@@ -9,4 +9,4 @@ alias dc='docker-compose'
 alias vi='vim'
 alias vic='vim -u NONE -N'
 
-export PATH="~/bin:$PATH"
+[ -z "$TMUX" ] || PATH="$(echo $PATH | sed 's;^'$HOME'/.local/bin:'$HOME'/bin:;;')"
