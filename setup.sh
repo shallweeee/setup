@@ -30,7 +30,7 @@ setup() {
 setup_packages() {
   log $FUNCNAME
 
-  local PACKAGES="git tig tree vim"
+  local PACKAGES="curl git tig tree vim"
   if which apt >/dev/null; then
     #$SUDO apt update
     $SUDO apt install -y $PACKAGES
