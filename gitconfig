@@ -3,3 +3,5 @@
 	ci = commit
 	co = checkout
 	st = status
+[credential]
+	helper = store
