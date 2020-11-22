@@ -1,3 +1,8 @@
+" minimal setting
+set nocompatible
+filetype plugin on
+
+" plugin manager
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/matchit.zip'
