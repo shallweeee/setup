@@ -101,4 +101,4 @@ setup .tmux.conf "$TMUXCONF_LOADER"
 setup .vimrc "$VIMRC_LOADER" '"'
 setup_vimplug
 setup_gitconfig
-change_branch
+#change_branch
