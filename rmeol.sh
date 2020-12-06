@@ -1,7 +1,7 @@
 #! /bin/bash
 
 has_eol() {
-  tail -1 "$1" | od -An -tx1 | grep -q 0a
+  tail -1 "$1" | od -An -tx1 | awk '{print $NF}' | grep -q 0a
 }
 
 get_size() {
