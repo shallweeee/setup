@@ -15,6 +15,8 @@ set et ts=2 sw=2
 
 nmap <F12> :!git 
 nmap <F11> yiw:grep <C-R>0 -wrn .
+map <C-J> :cn<CR>
+map <C-K> :cp<CR>
 
 if has('autocmd')
   autocmd FileType python setlocal makeprg=flake8\ %
