@@ -88,8 +88,21 @@ setup_gitconfig() {
 change_branch() {
   log $FUNCNAME
 
-  cd "$(dirname $0)"
+  pushd "$(dirname $0)"
   git checkout -b "$(uname -n)"
+  popd
+}
+
+link_wincmds() {
+  uname -r | grep -q microsoft-standard || return
+  log $FUNCNAME
+
+  pushd "$(dirname $0)"
+  sed -n '/^\s*wincmds/{s/.*\[\(.*\)\]=.*/\1/; p}' win |
+  while read cmd; do
+    ln -s win $cmd
+  done
+  popd
 }
 
 check_sudo
@@ -102,3 +115,4 @@ setup .vimrc "$VIMRC_LOADER" '"'
 setup_vimplug
 setup_gitconfig
 #change_branch
+link_wincmds

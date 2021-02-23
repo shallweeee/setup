@@ -1,0 +1,16 @@
+#! /bin/bash
+
+declare -A wincmds
+wincmds[chrome]='/mnt/c/Program Files/Google/Chrome/Application/chrome.exe'
+wincmds[excel]='/mnt/c/Program Files (x86)/Microsoft Office/Office14/excel.exe'
+wincmds[explorer]='/mnt/c/Windows/explorer.exe'
+wincmds[meld]='/mnt/c/Program Files (x86)/Meld/Meld.exe'
+
+name="${0##*/}"
+
+if [ $name = win ]; then
+  name="$1"
+  shift
+fi
+
+"${wincmds[$name]}" "$@"
