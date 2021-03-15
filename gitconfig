@@ -3,5 +3,7 @@
 	ci = commit
 	co = checkout
 	st = status
+[core]
+	editor = vim
 [credential]
 	helper = store
