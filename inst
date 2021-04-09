@@ -1,0 +1,23 @@
+install_chrome() {
+  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google.list > /dev/null
+  sudo apt update
+  sudo apt install -y google-chrome-stable
+  # sudo rm -rf /etc/apt/sources.list.d/google.list
+  # sudo apt clean
+  # sudo apt update
+}
+
+install_docker() {
+  sudo apt-get remove docker docker-engine docker.io containerd runc
+  sudo apt update
+  sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+  sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+  #sudo docker run hello-world
+
+  sudo groupadd docker
+  sudo usermod -aG docker $USER
+}
