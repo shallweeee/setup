@@ -7,6 +7,8 @@ alias rm='rm -i'
 
 alias gerrit_push='git push origin HEAD:refs/for/`git branch --show-current`'
 
+alias pip='pip --trusted-host pypi.org --trusted-host files.pythonhosted.org'
+
 alias vi='vim'
 alias vifr='vim -u NONE -N' # factory reset
 
