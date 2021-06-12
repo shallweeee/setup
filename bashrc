@@ -14,8 +14,12 @@ alias vifr='vim -u NONE -N' # factory reset
 
 alias doc='docker'
 alias dc='docker-compose'
+alias dcl='docker-compose logs'
 dce() {
-  dc exec "$1" bash
+  srv=$1
+  shift
+  [ $# -gt 0 ] && cmd="$@" || cmd=bash
+  dc exec $srv $cmd
 }
 #export -f dce
 

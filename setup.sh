@@ -82,7 +82,7 @@ git_config() {
 setup_gitconfig() {
   git_config user.email
   git_config user.name
-  git_config include.path ~/bin/gitconfig
+  git_config include.path '~/bin/gitconfig'
 }
 
 change_branch() {
