@@ -82,7 +82,7 @@ git_config() {
 setup_gitconfig() {
   git_config user.email
   git_config user.name
-  git_config include.path $HOME/bin/gitconfig
+  git_config include.path ~/bin/gitconfig
 }
 
 change_branch() {
@@ -97,12 +97,7 @@ link_wincmds() {
   uname -r | grep -q microsoft-standard || return
   log $FUNCNAME
 
-  pushd "$(dirname $0)"
-  sed -n '/^\s*wincmds/{s/.*\[\(.*\)\]=.*/\1/; p}' win |
-  while read cmd; do
-    ln -s win $cmd
-  done
-  popd
+  "$(dirname $0)"/win
 }
 
 check_sudo

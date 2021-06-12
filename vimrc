@@ -6,6 +6,7 @@ filetype plugin on
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/matchit.zip'
+Plug 'davidhalter/jedi-vim'
 call plug#end()
 
 set grepprg=grep\ --exclude=tags\ --exclude-dir=.git\ -n\ $*\ /dev/null
@@ -20,6 +21,6 @@ nmap <C-J> :cn<CR>
 nmap <C-K> :cp<CR>
 
 if has('autocmd')
-  autocmd FileType python setlocal makeprg=flake8\ %
-  autocmd FileType python setlocal errorformat=%f:%l:%c:\ %m
+  au FileType python setlocal makeprg=flake8\ %
+  au FileType python setlocal errorformat=%f:%l:%c:\ %m
 endif

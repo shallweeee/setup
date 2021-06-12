@@ -15,7 +15,7 @@ alias vifr='vim -u NONE -N' # factory reset
 alias doc='docker'
 alias dc='docker-compose'
 dce() {
-  docker-compose exec "$1" bash
+  dc exec "$1" bash
 }
 #export -f dce
 

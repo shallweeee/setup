@@ -5,10 +5,23 @@ wincmds[chrome]='/mnt/c/Program Files/Google/Chrome/Application/chrome.exe'
 wincmds[excel]='/mnt/c/Program Files (x86)/Microsoft Office/Office14/excel.exe'
 wincmds[explorer]='/mnt/c/Windows/explorer.exe'
 wincmds[meld]='/mnt/c/Program Files (x86)/Meld/Meld.exe'
+wincmds[7z]='/mnt/c/Program Files/7-Zip/7z.exe'
+
+make_link() {
+  local orig_path="$(realpath "$0")"
+  local orig="${orig_path##*/}"
+
+  cd "$(dirname "$orig_path")"
+  for cmd in ${!wincmds[@]}; do
+    ln -s $orig $cmd
+  done
+  exit
+}
 
 name="${0##*/}"
 
 if [ $name = win ]; then
+  [ x$1 = x ] && make_link
   name="$1"
   shift
 fi
