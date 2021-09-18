@@ -83,6 +83,7 @@ setup_gitconfig() {
   git_config user.email
   git_config user.name
   git_config include.path '~/bin/gitconfig'
+  git_config core.excludesfile '~/bin/gitignore_global'
 }
 
 change_branch() {
