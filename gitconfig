@@ -4,6 +4,8 @@
 	co = checkout
 	st = status
 	lg = log --decorate --oneline --graph HEAD
+	ls = log --oneline
+	dc = diff --cached
 [core]
 	editor = vim
 [credential]
