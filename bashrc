@@ -7,7 +7,8 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 
-alias gerrit_push='git push origin HEAD:refs/for/`git branch --show-current`'
+#alias gerrit_push='git push origin HEAD:refs/for/`git branch --show-current`'
+alias gerrit_push='git push origin HEAD:refs/for/`git branch | sed -n "/^\*/{s/..//;p}"`'
 
 alias pip='pip --trusted-host pypi.org --trusted-host files.pythonhosted.org'
 alias act='conda activate'
@@ -26,5 +27,8 @@ dce() {
   dc exec $srv $cmd
 }
 #export -f dce
+
+alias urldec='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
+alias urlenc='python3 -c "import sys, urllib.parse as ul; print (ul.quote_plus(sys.argv[1]))"'
 
 [ -z "$TMUX" ] || PATH="$(echo $PATH | sed 's;^'$HOME'/.local/bin:'$HOME'/bin:;;')"
