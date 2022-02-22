@@ -2,11 +2,22 @@
 	br = branch
 	ci = commit
 	co = checkout
-	st = status
-	lg = log --decorate --oneline --graph HEAD
-	ls = log --oneline
+	d  = diff
 	dc = diff --cached
+	st = status
+	lg = log --oneline --decorate --graph HEAD
+	ls = log --oneline
+
+	# git_cc.sh shortcut
+	cc = "! f() { \
+		[ x-b = x$1 ] && { BRANCH=\"$1 $2\"; shift 2; }; \
+		git_cc.sh $BRANCH cc \"$@\"; \
+	}; f"
+	cp = "! git_cc.sh cp"
+	cn = "! git_cc.sh cn"
+
 [core]
 	editor = vim
+
 [credential]
 	helper = store
