@@ -27,4 +27,7 @@ dce() {
 }
 #export -f dce
 
+alias c='xclip -selection clipboard'
+alias v='xclip -selection clipboard -o'
+
 [ -z "$TMUX" ] || PATH="$(echo $PATH | sed 's;^'$HOME'/.local/bin:'$HOME'/bin:;;')"
