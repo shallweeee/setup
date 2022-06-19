@@ -20,5 +20,8 @@
 	editor = vim
 	quotepath = false
 
+[init]
+	defaultBranch = main
+
 [credential]
 	helper = store
