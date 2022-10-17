@@ -25,8 +25,11 @@ dce() {
   [ $# -gt 0 ] && cmd="$@" || cmd=bash
   dc exec $srv $cmd
 }
+complete -F _docker doc
+complete -F _docker_compose dc
 #export -f dce
 
+# command | c, c < file
 alias c='xclip -selection clipboard'
 alias v='xclip -selection clipboard -o'
 
