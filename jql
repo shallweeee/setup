@@ -1,0 +1,10 @@
+#! /bin/bash
+
+lines=
+while read line; do
+  lines="$lines $line"
+done
+
+cat << EOF | jq .
+$lines
+EOF
