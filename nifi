@@ -1,0 +1,93 @@
+#! /bin/bash
+
+NIFI_ADDR=localhost
+NIFI_PORT=8443
+BASE=https://$NIFI_ADDR:$NIFI_PORT/nifi-api
+
+usage() {
+  echo "usage: ${0##*/} <cmd> [<sub-cmd> [params]]"
+  echo "  cmd"
+  echo "    templates"
+  echo "      ls - show templates list"
+  echo "      id <name> - find template id"
+  echo "      dn <name|id> - download template"
+  echo "      del <name|id> - delte template"
+  echo "    commit <name> ['commit message'] - download as <name>.xml, make a git commit, and delete the template"
+  echo
+  echo "more detail - https://nifi.apache.org/docs/nifi-docs/rest-api/index.html"
+  exit
+}
+
+error() {
+  >&2 echo $*
+  exit
+}
+
+run() {
+  curl -s $BASE/"$@"
+}
+
+is_uuid() {
+  echo "$1" |
+    tr 'A-Z' 'a-z' |
+    grep -q '^[0-9a-z]\{8\}-[0-9a-z]\{4\}-[0-9a-z]\{4\}-[0-9a-z]\{4\}-[0-9a-z]\{12\}$' &&
+    true
+}
+
+get_template_id() {
+  is_uuid "$1" &&
+    echo "$1" ||
+    run flow/templates |
+      jq '.templates[].template | select(.name=="'"$1"'").id' |
+      tr -d \"
+}
+
+templates() {
+  local tid
+  if [ -z "$1" ]; then
+    usage
+  elif [ $1 = ls ]; then
+    run flow/templates | jq .
+  elif [ $1 = id ]; then
+    get_template_id "$2"
+  elif [ $1 = dn ]; then
+    tid=$(get_template_id "$2")
+    run templates/$tid/download
+  elif [ $1 = del ]; then
+    tid=$(get_template_id "$2")
+    run templates/$tid -XDELETE
+  fi
+}
+
+commit() {
+  #set -- nifi
+  local tid
+  local tname
+  if is_uuid "$1"; then
+    tid="$1"
+    tname="$(get_template_name "$1")"
+  else
+    tid="$(get_template_id "$1")"
+    tname="$1"
+  fi
+
+  is_uuid $tid || error "Invalid name '$tname'"
+  [ -z "$2" ] && msg='committed automatically' || msg="$2"
+
+  templates dn $tid > "${tname}.xml" &&
+    git commit -am "$msg" &&
+    templates del $tid
+}
+
+main() {
+  local cmd=$1
+  shift
+
+  [ -z "$cmd" ] && usage
+  $cmd "$@"
+}
+
+[ ! -z "$NIFI_ADDR" ] && [ ! -z "$NIFI_PORT" ] ||
+  error "NIFI_ADDR 와 NIFI_PORT 를 설정해 주세요"
+
+main "$@"
