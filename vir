@@ -1,0 +1,27 @@
+#! /bin/bash
+
+VV_OPTS="-f -a --spice-shared-dir=Public"
+IMG_DIR=~/vmm/images
+KEEP=
+
+while getopts "ks:" opt; do
+    case $opt in
+        k) KEEP=on ;;
+        s) SHARE=$OPTARG ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+name=$1
+
+cd $IMG_DIR
+
+[ -f $name.qcow2.orig ] || exit
+
+if virsh list | sed 1,2d | grep running | grep -q $name; then
+  virt-viewer $VV_OPTS $name &
+else
+  [ -z "$KEEP" ] && qemu-img create -F qcow2 -f qcow2 -b $name.qcow2.orig $name.qcow2 || true
+  [ $? -eq 0 ] &&
+  virsh start $name &&
+  virt-viewer $VV_OPTS $name &
+fi
