@@ -4,10 +4,28 @@ VV_OPTS="-f -a --spice-shared-dir=Public"
 IMG_DIR=~/vmm/images
 KEEP=
 
-while getopts "ks:" opt; do
+usage() {
+  echo "${0##*/} [options] <name>"
+  echo "    -d delete name"
+  echo "    -h this screen"
+  echo "    -k keep previous snapshot"
+  echo "    -m run virt-manager"
+  exit
+}
+
+delete() {
+  read -p "$1 을 정말 삭제하시겠습니까? [Ny] " ANS
+  [ x$ANS = xy ] || [ x$ANS = xY ] && virsh undefine $1 --remove-all-storage --nvram
+  exit
+}
+
+while getopts "d:hkms:" opt; do
     case $opt in
+        d) delete $OPTARG ;;
+        h) usage ;;
         k) KEEP=on ;;
-        s) SHARE=$OPTARG ;;
+        m) exec virt-manager ;;
+        s) SHARE="$OPTARG" ;;
     esac
 done
 shift $(( OPTIND - 1 ))
