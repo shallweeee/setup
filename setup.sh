@@ -101,6 +101,14 @@ link_wincmds() {
   "$(dirname $0)"/win
 }
 
+setup_completion() {
+  mkdir -p ~/.bash_completion.d
+  grep -q .bash_completion.d ~/.bash_completion 2> /dev/null || echo 'for bc in ~/.bash_completion.d/*; do . $bc; done' >> ~/.bash_completion
+
+  curl -L https://raw.githubusercontent.com/docker/cli/master/contrib/completion/bash/docker -o ~/.bash_completion.d/docker
+  curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/bash/docker-compose -o ~/.bash_completion.d/docker-compose
+}
+
 check_sudo
 setup_packages
 setup_alternatives
@@ -112,3 +120,4 @@ setup_vimplug
 setup_gitconfig
 #change_branch
 link_wincmds
+setup_completion
