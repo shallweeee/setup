@@ -1,5 +1,7 @@
 #! /bin/bash
 
+SCRIPT_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+
 BASHRC_LOADER='source ~/bin/bashrc'
 INPUTRC_LOADER='$include ~/bin/inputrc'
 TMUXCONF_LOADER='source ~/bin/tmux.conf'
@@ -89,7 +91,7 @@ setup_gitconfig() {
 change_branch() {
   log $FUNCNAME
 
-  pushd "$(dirname $0)"
+  pushd $SCRIPT_DIR
   git checkout -b "$(uname -n)"
   popd
 }
@@ -98,15 +100,21 @@ link_wincmds() {
   uname -r | grep -q microsoft-standard || return
   log $FUNCNAME
 
-  "$(dirname $0)"/win
+  $SCRIPT_DIR/win
 }
 
 setup_completion() {
   mkdir -p ~/.bash_completion.d
   grep -q .bash_completion.d ~/.bash_completion 2> /dev/null || echo 'for bc in ~/.bash_completion.d/*; do . $bc; done' >> ~/.bash_completion
 
-  curl -L https://raw.githubusercontent.com/docker/cli/master/contrib/completion/bash/docker -o ~/.bash_completion.d/docker
-  curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/bash/docker-compose -o ~/.bash_completion.d/docker-compose
+  pushd ~/.bash_completion.d
+  curl -L https://raw.githubusercontent.com/docker/cli/master/contrib/completion/bash/docker -o docker
+  sed -i '/complete -F/s/\<docker.exe\>/doc/' docker
+  curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/bash/docker-compose -o docker-compose
+  sed -i '/complete -F/s/\<docker-compose.exe\>/dc/' docker-compose
+  curl -L https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o git
+  sed -i '/___git_complete git __git_main/a ___git_complete gitall __git_main' git
+  popd
 }
 
 check_sudo

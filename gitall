@@ -1,0 +1,21 @@
+#! /bin/bash
+
+do_git() {
+  git "$@"
+}
+
+do_submodule() {
+  git submodule foreach git "$@"
+}
+
+pushd .
+for d in $(pwd | sed 's;/; ;g'); do
+  [ -f .gitmodules ] && {
+    do_git "$@" && do_submodule "$@"
+    exit
+  }
+  cd ..
+done
+popd
+
+do_git "$@"

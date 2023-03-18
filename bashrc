@@ -17,7 +17,6 @@ alias vi='vim'
 alias vifr='vim -u NONE -N' # factory reset
 
 alias doc='docker'
-alias dc='docker-compose'
 alias dcl='docker-compose logs'
 dce() {
   srv=$1
@@ -25,9 +24,8 @@ dce() {
   [ $# -gt 0 ] && cmd="$@" || cmd=bash
   dc exec $srv $cmd
 }
-complete -F _docker doc
-complete -F _docker_compose dc
-#export -f dce
+
+shopt -s direxpand
 
 # command | c, c < file
 alias c='xclip -selection clipboard'

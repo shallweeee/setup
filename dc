@@ -1,0 +1,14 @@
+#! /bin/bash
+
+SHOW_PATH=yes
+
+for d in $(pwd | sed 's;/; ;g'); do
+  [ -f docker-compose.yml ] && {
+    [ x$SHOW_PATH = xyes ] && pwd
+    docker-compose "$@"
+    exit
+  }
+  cd ..
+done
+
+>&2 echo '경로에서 docker-compose.yml 파일을 찾을 수 없습니다.'
