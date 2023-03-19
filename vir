@@ -33,12 +33,12 @@ name=$1
 
 cd $IMG_DIR
 
-[ -f $name.qcow2.orig ] || exit
+[ -f orig/$name.qcow2 ] || exit
 
 if virsh list | sed 1,2d | grep running | grep -q $name; then
   virt-viewer $VV_OPTS $name &
 else
-  [ -z "$KEEP" ] && qemu-img create -F qcow2 -f qcow2 -b $name.qcow2.orig $name.qcow2 || true
+  [ -z "$KEEP" ] && qemu-img create -F qcow2 -f qcow2 -b orig/$name.qcow2 $name.qcow2 || true
   [ $? -eq 0 ] &&
   virsh start $name &&
   virt-viewer $VV_OPTS $name &
