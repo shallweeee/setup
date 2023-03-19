@@ -1,0 +1,15 @@
+#! /bin/bash
+
+[ x$1 = x-n ] && {
+  images=$(docker images | awk '{if ($1 == "<none>" && $2 == "<none>") print $3}' | xargs)
+  shift
+}
+
+images="$images $*"
+
+for iid in $images; do
+  containers=$(docker ps -qa --filter "ancestor=$iid")
+  docker stop $containers
+  docker rm $containers
+  docker rmi $iid
+done
