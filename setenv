@@ -1,0 +1,119 @@
+#! /bin/env python3
+
+import argparse
+import os
+import re
+import sys
+
+preset = {}
+
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description='템플릿 파일로부터 설정 파일 생성',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+템플릿 파일의 value를 입력 받아 .env 파일 생성
+
+* 라인 규칙
+  1. key = value 형식이 아님
+    템플릿 출력
+  2. key =
+    사용자 입력을 출력
+  3. key = ? command
+    명령어 실행 결과를 기본값으로 제공,  사용자 입력을 출력
+  4. key = ! command
+    명령어 실행 결과를 출력
+
+* 재설정하는 경우(.env 파일이 있는 경우)
+  1. key = value 형식이 아님
+    템플릿 출력
+  2. key =
+  3. key = ? command
+    기존값을 기본값으로 제공,  사용자 입력을 출력
+  4. key = ! command
+    변경 없음
+'''
+    )
+    parser.add_argument('-c', '--clear', action='store_true', default=False,
+                        help='기존 파일 로딩 안함')
+    parser.add_argument('-t', '--template', type=str,
+                        default='./setenv.template',
+                        help='템플릿 파일 경로. 기본: ./setenv.template')
+    parser.add_argument('-o', '--output-dir', type=str, default='.',
+                        help='출력 디렉토리 경로. 기본: ./')
+    args = parser.parse_args()
+    return args
+
+
+def load_env(fname):
+    try:
+        with open(fname, 'rt') as f:
+            dic = {}
+            for line in f.readlines():
+                line = re.sub(r'#.*', '', line).strip()
+                if not line:
+                    continue
+                key, val = map(str.strip, line.split('='))
+                dic[key] = val
+            return dic
+    except FileNotFoundError:
+        pass
+    return {}
+
+
+def prompt(key, val=''):
+    try:
+        while True:
+            res = input(f'{key} [{val}] ').strip()
+            if res:
+                return res
+            if val:
+                return val
+    except (EOFError, KeyboardInterrupt):
+        print()
+        sys.exit()
+
+
+def process(line):
+    def shell(cmd):
+        return os.popen(cmd).read().strip()
+
+    tmp = re.sub(r'#.*', '', line).strip()
+    if tmp.find('=') == -1:
+        return line.strip()
+
+    key, val = map(str.strip, tmp.split('='))
+    if not val:
+        val = preset.get(key, '')
+        val = prompt(key, val)
+    elif val[0] == '?':
+        val = preset[key] if preset.get(key) else shell(val[1:])
+        val = prompt(key, val)
+    elif val[0] == '!':
+        val = preset[key] if preset.get(key) else shell(val[1:])
+
+    return f'{key}={val}'
+
+
+def main():
+    global preset
+
+    args = get_args()
+
+    # BIN = os.path.dirname(os.path.abspath(sys.argv[0]))
+    # ROOT = os.path.dirname(BIN)
+    if not args.clear:
+        preset = load_env(os.path.join(args.output_dir, '.env'))
+
+    output = []
+    with open(args.template, 'rt') as f:
+        output = [process(line) for line in f.readlines()]
+
+    with open(os.path.join(args.output_dir, '.env'), 'wt') as f:
+        f.write('\n'.join(output))
+        f.write('\n')
+
+
+if __name__ == '__main__':
+    main()
