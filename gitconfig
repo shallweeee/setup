@@ -1,10 +1,13 @@
 [alias]
+	st = status
 	br = branch
 	ci = commit
 	co = checkout
 	d  = diff
 	dc = diff --cached
-	st = status
+	dcn = diff --cached --name-only
+	dn = diff --name-only
+	ex = ls-files -o --exclude-standard
 	lg = log --oneline --decorate --graph HEAD
 	ls = log --oneline
 
