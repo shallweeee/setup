@@ -1,0 +1,13 @@
+# https://gist.github.com/mutewinter/825f44bfd3aa810088ea5de2f61bad63
+snippet ii "magic import" b
+import `!p
+def formatVariableName(path):
+    parts = path.split('/')
+    module = parts[0]
+    if len(parts) > 1:
+        return parts[-1]
+    else:
+        return re.sub(r'[_\-]', '', module.title())
+snip.rv = formatVariableName(t[1])
+` from '${1}';$0
+endsnippet
