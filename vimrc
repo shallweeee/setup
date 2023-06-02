@@ -1,9 +1,11 @@
 set nocompatible
 set encoding=utf-8
-filetype plugin on
+filetype plugin indent on
 
 " :PlugInstall
 call plug#begin('~/.vim/plugged')
+Plug 'vim-scripts/matchit.zip'
+Plug 'tpope/vim-sensible'
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'SirVer/ultisnips'
@@ -11,6 +13,7 @@ Plug 'prettier/vim-prettier', {'do': 'yarn install --frozen-lockfile --productio
 Plug 'mattn/emmet-vim'
 call plug#end()
 
+set ai si
 set history=200
 set wildmode=longest,list
 set splitright
