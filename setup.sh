@@ -110,8 +110,8 @@ setup_completion() {
   pushd ~/.bash_completion.d
   curl -L https://raw.githubusercontent.com/docker/cli/master/contrib/completion/bash/docker -o docker
   sed -i '/complete -F/s/\<docker.exe\>/doc/' docker
-  curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/bash/docker-compose -o docker-compose
-  sed -i '/complete -F/s/\<docker-compose.exe\>/dc/' docker-compose
+#  curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/bash/docker-compose -o docker-compose
+#  sed -i '/complete -F/s/\<docker-compose.exe\>/dc/' docker-compose
   curl -L https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o git
   sed -i '/___git_complete git __git_main/a ___git_complete gitall __git_main' git
   popd

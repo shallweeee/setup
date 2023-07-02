@@ -1,6 +1,9 @@
 global !p
 def kebabcase(t):
-  return '-'.join([w.lower() for w in re.findall('[a-z]+|[A-Z]+[a-z]*', t)])
+    return '-'.join([w.lower() for w in re.findall('[a-z]+|[A-Z]+[a-z]*', t)])
+
+def pascal(t):
+    return re.sub(r'^(\w)', lambda m: m.group(1).upper(), t)
 
 def formatVariableName(path):
     parts = path.split('/')
@@ -13,7 +16,7 @@ endglobal
 
 # https://gist.github.com/mutewinter/825f44bfd3aa810088ea5de2f61bad63
 snippet ii "magic import" b
-import `!p snip.rv = formatVariableName(t[1])` from '${1}';
+import `!p snip.rv=formatVariableName(t[1])` from '${1}';
 endsnippet
 
 snippet imk "imk" b
@@ -24,26 +27,82 @@ snippet imn "imn" b
 import { $1 } from '$2';
 endsnippet
 
-snippet sfce "sfce" b
+snippet rfcde "export default react function component" b
 import React from 'react';
 
-const ${1:`!v expand('%:t:r')`} = ($2) => {
+type Props = {
+  $2
+};
+
+const ${1:`!v expand('%:t:r')`} = (props: Props) => {
   return (
     $0
   );
 };
 
-export default ${3:$1};
+export default $1;
+endsnippet
+
+snippet rccde "export default react class component" b
+import React, { Component } from 'react';
+
+type Props = {
+  $2
+};
+
+type State = {
+  $3
+};
+
+class ${1:`!v expand('%:t:r')`} extends Component<Props, State> {
+  $4
+  render() {
+    return (
+      $0
+    );
+  }
+}
+
+export default $1;
 endsnippet
 
 snippet uR "uR" b
-const $1 = useRef<$2>(null);
+const $1 = useRef<$2>($3);
 endsnippet
 
 snippet uS "uS" b
-const [$1, set`!p snip.rv = t[1].capitalize()`] = useState<$3>($4);
+const [$1, set`!p snip.rv=pascal(t[1])`] = useState<$3>($4);
 endsnippet
 
-snippet "<(\a.*)" "single tag" r
-`!p snip.rv='<' + match.group(1).strip() + ' />'`$0
+snippet uE "uE" b
+useEffect(() => {
+  $1
+  return () => {$2};
+}, [$3]);
+endsnippet
+
+snippet uM "uM" b
+const $1 = useMemo<$2>(() => $3, [$4]);
+endsnippet
+
+snippet cl "cl" b
+console.log($1);
+endsnippet
+
+snippet fe "function expression" b
+$1 = ($2) => {
+  $3
+};
+endsnippet
+
+snippet fec "const function expression" b
+const $1 = ($2) => {
+  $0
+};
+endsnippet
+
+snippet fece "export const function expression" b
+export const $1 = ($2) => {
+  $0
+};
 endsnippet

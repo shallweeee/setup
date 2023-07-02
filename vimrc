@@ -4,8 +4,8 @@ filetype plugin indent on
 
 " :PlugInstall
 call plug#begin('~/.vim/plugged')
-Plug 'vim-scripts/matchit.zip'
 Plug 'tpope/vim-sensible'
+Plug 'vim-scripts/matchit.zip'
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'SirVer/ultisnips'
