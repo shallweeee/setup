@@ -1,0 +1,21 @@
+#! /bin/bash
+
+usage() {
+  echo "usage: ${0##*/} <input m4> [start time] <end time>"
+  echo "MP4Box -splitx 77:137 -out output.mp4 original.mp4"
+  exit
+}
+
+secs() {
+  local s=0
+  for i in `echo $1 | sed 's/\..*//; s/:/ /g'`; do
+    s=$(($s * 60 + 10#$i))
+  done
+  ms=$(echo $1. | sed 's/[^.]*\././; s/\.$//')
+  echo $s$ms
+}
+
+[ -f "$1" ] || usage
+[ $# -eq 2 ] && SPLITX="-splitx 0:$(secs $2)" || SPLITX="-splitx $(secs $2):$(secs $3)"
+echo mp4box $SPLITX -out output.mp4 "$1"
+mp4box $SPLITX -out output.mp4 "$1"
