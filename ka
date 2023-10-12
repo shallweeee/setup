@@ -1,0 +1,24 @@
+#! /bin/bash
+
+clean="\033[1K\033[H"
+marks="|/-\\"
+
+spin() {
+  local i=`expr $2 % ${#marks}`
+  local mark=${marks:$i:1}
+  echo -en "$clean $1 $mark "
+}
+
+keepalive() {
+  local m=0
+  while true; do
+    for s in `seq 1 60`; do
+      spin $m $s
+      sleep 1
+    done
+    m=`expr $m + 1`
+  done
+}
+
+clear
+keepalive
