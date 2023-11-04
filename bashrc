@@ -10,8 +10,13 @@ alias rm='rm -i'
 alias gerrit_push='git push origin HEAD:refs/for/`git branch --show-current`'
 
 alias pip='pip --trusted-host pypi.org --trusted-host files.pythonhosted.org'
-alias act='conda activate'
-alias deact='conda deactivate'
+act() {
+  local venv=$(find . -path '*/bin/activate' | head -1)
+  [ -z "$1" ] && [ -n "$venv" ] && . $venv || conda activate $1
+}
+deact() {
+  [ -z "$VIRTUAL_ENV" ] && conda deactivate || deactivate
+}
 
 alias vi='vim'
 alias vifr='vim -u NONE -N' # factory reset
