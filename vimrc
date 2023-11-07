@@ -11,6 +11,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'SirVer/ultisnips'
 Plug 'prettier/vim-prettier', {'do': 'yarn install --frozen-lockfile --production'}
 Plug 'mattn/emmet-vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 call plug#end()
 
 set ai si
@@ -31,6 +32,8 @@ if has('autocmd')
   au FileType python setlocal makeprg=flake8\ %
   au FileType python setlocal errorformat=%f:%l:%c:\ %m
   au FileType typescriptreact,typescript,javascriptreact,javascript,css,html,json setlocal et ts=2 sw=2
+  au FileType java setl sw=2 ts=2 et sts=2 tw=100
+  au FileType markdown map <F5> <Plug>MarkdownPreviewToggle
 endif
 
 " Vimwiki
