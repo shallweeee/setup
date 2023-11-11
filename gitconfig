@@ -8,7 +8,8 @@
 	dcn = diff --cached --name-only
 	dn = diff --name-only
 	ex = ls-files -o --exclude-standard
-	lg = log --oneline --decorate --graph HEAD
+	lr = log --oneline --decorate --graph --left-right
+	lg = log --oneline --decorate --graph
 	ls = log --oneline
 
 	# git_cc.sh shortcut
