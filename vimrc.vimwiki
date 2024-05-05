@@ -3,24 +3,16 @@
 " 로컬 리더 키 설정은 취향이니 각자 마음에 드는 키로 설정한다
 let maplocalleader = "\\"
 
-"1번 위키(공개용)와 2번 위키(개인용)
+"1번 위키(개인용)와 2번 obsidian
 let g:vimwiki_list = [
-    \{
-    \   'path': '~/vimwiki/local/wiki',
-    \   'ext' : '.md',
-    \   'diary_rel_path': '.',
-    \},
-    \{
-    \   'path': '~/vimwiki/githubpages/_wiki',
-    \   'ext' : '.md',
-    \   'diary_rel_path': '.',
-    \},
+    \{ 'path': '~/vimwiki/local/wiki', 'ext' : '.md', 'diary_rel_path': '.' },
+    \{ 'path': '~/sync/obsidian', 'ext' : '.md', 'diary_rel_path': '.' },
 \]
 
 " vimwiki의 conceallevel 을 끄는 쪽이 좋다
 let g:vimwiki_conceallevel = 0
 
-" 자주 사용하는 vimwiki 명령어에 단축키를 취향대로 매핑해둔다
+" 열기 - 인덱스<LocalLeader>ww
 command! WikiIndex :VimwikiIndex
 nmap <LocalLeader>ww <Plug>VimwikiIndex
 nmap <LocalLeader>wi <Plug>VimwikiDiaryIndex
