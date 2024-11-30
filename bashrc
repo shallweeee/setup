@@ -10,9 +10,19 @@ alias rm='rm -i'
 alias gerrit_push='git push origin HEAD:refs/for/`git branch --show-current`'
 
 alias pip='pip --trusted-host pypi.org --trusted-host files.pythonhosted.org'
+
+act_venv() {
+  while [ "$PWD" != / ]; do
+    for d in .venv venv; do f="$d/bin/activate"; [ -f "$f" ] && . "$f" && return; done
+    cd ..
+  done
+}
 act() {
-  local venv=$(find . -path '*/bin/activate' | head -1)
-  [ -z "$1" ] && [ -n "$venv" ] && . $venv || conda activate $1
+  if [ -z "$1" ]; then
+    pushd . &>/dev/null; act_venv; popd &>/dev/null
+  else
+    conda activate $1
+  fi
 }
 deact() {
   [ -z "$VIRTUAL_ENV" ] && conda deactivate || deactivate
