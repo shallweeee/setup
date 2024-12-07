@@ -103,6 +103,22 @@ link_wincmds() {
   $SCRIPT_DIR/win
 }
 
+setup_completion_vir() {
+cat << EOF > vir
+_vir_complete() {
+  local cur="\${COMP_WORDS[COMP_CWORD]}"
+  local BASE=~/vmm/images/orig
+
+  if [ \$COMP_CWORD = 1 ]; then
+    COMPREPLY=( \$( compgen -W "\$(ls \$BASE/{orig/,}*.qcow2 2>/dev/null | sed 's/\.qcow2//; s;.*/;;' | xargs)" -- "\$cur" ) )
+  else
+    COMPREPLY=()
+  fi
+}
+complete -F _vir_complete vir
+EOF
+}
+
 setup_completion() {
   mkdir -p ~/.bash_completion.d
   grep -q .bash_completion.d ~/.bash_completion 2> /dev/null || echo 'for bc in ~/.bash_completion.d/*; do . $bc; done' >> ~/.bash_completion
@@ -114,6 +130,7 @@ setup_completion() {
 #  sed -i '/complete -F/s/\<docker-compose.exe\>/dc/' docker-compose
   curl -L https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o git
   sed -i '/___git_complete git __git_main/a ___git_complete gitall __git_main' git
+  setup_completion_vir
   popd
 }
 
