@@ -11,6 +11,7 @@
 	lr = log --oneline --decorate --graph --left-right
 	lg = log --oneline --decorate --graph
 	ls = log --oneline
+	addx = !git dcn | xargs git add
 
 	# git_cc.sh shortcut
 	cc = "! f() { \
