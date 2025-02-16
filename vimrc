@@ -21,6 +21,7 @@ set splitright
 set hls
 set vb t_vb=
 set grepprg=grep\ --exclude=tags\ --exclude-dir=.git\ -n\ $*\ /dev/null
+set ruler
 
 " 커서 아래의 설정 이름을 값으로 치환
 nnoremap <leader>e :let @a = &<C-R>=expand('<cword>')<CR><CR>:exe "norm! ciw" . @a<CR>

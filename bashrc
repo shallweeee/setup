@@ -1,4 +1,5 @@
 alias explorer=nautilus
+alias which='command -v'
 
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
