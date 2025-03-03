@@ -1,7 +1,7 @@
 alias explorer=nautilus
 alias which='command -v'
 
-alias grep='grep --color=auto'
+alias grep='grep --color=auto --exclude-dir=.[!.]* --exclude-dir=__pycache__'
 alias ls='ls --color=auto'
 
 alias cp='cp -i'
