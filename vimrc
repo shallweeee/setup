@@ -39,7 +39,7 @@ if has('autocmd')
   au FileType python setlocal errorformat=%f:%l:%c:\ %m
   au FileType typescriptreact,typescript,javascriptreact,javascript,css,html,json setlocal et ts=2 sw=2
   au FileType java setl sw=2 ts=2 et sts=2 tw=100
-  au FileType markdown map <F5> <Plug>MarkdownPreviewToggle
+  au FileType markdown nmap <F5> <Plug>MarkdownPreviewToggle
 endif
 
 " Vimwiki

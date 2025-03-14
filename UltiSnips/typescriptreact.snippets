@@ -12,6 +12,17 @@ def formatVariableName(path):
         return parts[-1]
     else:
         return re.sub(r'[_\-]', '', module.title())
+
+def cap(t):
+    return ''.join(t.title().split('-'))
+
+def title(t):
+    return t.title().replace('-', ' ')
+
+def neatProps(props):
+    params = [p.split(':')[0].strip().strip('?') for p in props.split(';')]
+    return ', '.join([p for p in params if p])
+
 endglobal
 
 # https://gist.github.com/mutewinter/825f44bfd3aa810088ea5de2f61bad63
@@ -66,26 +77,26 @@ class ${1:`!v expand('%:t:r')`} extends Component<Props, State> {
 export default $1;
 endsnippet
 
-snippet uR "uR" b
+snippet uR "use reference" b
 const $1 = useRef<$2>($3);
 endsnippet
 
-snippet uS "uS" b
+snippet uS "use state" b
 const [$1, set`!p snip.rv=pascal(t[1])`] = useState<$3>($4);
 endsnippet
 
-snippet uE "uE" b
+snippet uE "use effect" b
 useEffect(() => {
   $1
   return () => {$2};
 }, [$3]);
 endsnippet
 
-snippet uM "uM" b
+snippet uM "use memo" b
 const $1 = useMemo<$2>(() => $3, [$4]);
 endsnippet
 
-snippet cl "cl" b
+snippet cl "console log" b
 console.log($1);
 endsnippet
 
@@ -105,4 +116,86 @@ snippet fece "export const function expression" b
 export const $1 = ($2) => {
   $0
 };
+endsnippet
+
+snippet rfced "react function component export default" b
+const ${1:`!v expand('%:t:r')`} = ($2) => {
+  return (
+    $0
+  );
+};
+
+export default $1;
+endsnippet
+
+
+snippet edf "export default function" b
+import type { Route } from "./+types/`!v expand('%:t:r')`"
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "${2:`!p snip.rv=title(snip.basename)`} | wemake" },
+    { name: "description", content: "$3" },
+  ];
+}
+
+export default function `!p snip.rv=cap(snip.basename)`({ params }: Route.ComponentProps) {
+  return (
+    <div>
+      ${0:`!p snip.rv=title(snip.basename)`}
+    </div>
+  );
+}
+endsnippet
+
+snippet lo "layout" b
+import { Outlet } from "react-router";
+
+export default function `!p snip.rv=cap(snip.basename)`() {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
+}
+endsnippet
+
+snippet redi "redirect" b
+import { redirect } from "react-router";
+import type { Route } from "./+types/`!v expand('%:t:r')`";
+
+export function loader({ params }: Route.LoaderArgs) {
+  return redirect(\`$0\`);
+}
+endsnippet
+
+snippet afm "Array.from({length:}).map((), i) => (" b
+{Array.from({ length: $1 }).map((_, index) => (
+  $0
+))}
+endsnippet
+
+snippet absc "abstract component" b
+interface $1Props {
+  $2
+}
+
+export function ${1:`!p snip.rv=cap(snip.basename)`}({`!p snip.rv=neatProps(t[2])`}: $1Props ) {
+  return (
+    $0
+  );
+}
+endsnippet
+
+snippet ava "avatar" b
+<Avatar>
+  <AvatarImage src="${1:https://github.com/shadcn.png}" />
+  <AvatarFallback>${2:S}</AvatarFallback>
+</Avatar>
+endsnippet
+
+snippet arr "array" b
+{Array.from({length: $1}).map((_, index) => (
+  $0
+))}
 endsnippet

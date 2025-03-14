@@ -1,6 +1,7 @@
 alias explorer=nautilus
 alias which='command -v'
 
+alias diff='diff --exclude=.git'
 alias grep='grep --color=auto --exclude-dir=.[!.]* --exclude-dir=__pycache__'
 alias ls='ls --color=auto'
 
@@ -51,6 +52,6 @@ alias urlenc='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sy
 alias urldec='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
 
 #[ -z "$TMUX" ] || PATH="$(echo $PATH | sed 's;^'$HOME'/.local/bin:'$HOME'/bin:;;')"
-export PATH="~/.local/usr/bin:$PATH"
+export PATH="~/.local/bin:$PATH"
 
 [ -s ~/.cargo/env ] && . ~/.cargo/env

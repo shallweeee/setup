@@ -29,8 +29,10 @@ fi
 mkdir -p $APPS
 cat << EOF > "$desktop"
 [Desktop Entry]
+Version=1.0
 Type=Application
 Name=$name
+Terminal=false
 Exec=$exec
 Icon=
 EOF
