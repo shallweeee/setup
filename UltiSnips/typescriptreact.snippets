@@ -1,4 +1,7 @@
 global !p
+def snake(t):
+    return '_'.join([w.lower() for w in re.findall('[a-z]+|[A-Z]+[a-z]*', t)])
+
 def kebabcase(t):
     return '-'.join([w.lower() for w in re.findall('[a-z]+|[A-Z]+[a-z]*', t)])
 
@@ -22,6 +25,31 @@ def title(t):
 def neatProps(props):
     params = [p.split(':')[0].strip().strip('?') for p in props.split(';')]
     return ', '.join([p for p in params if p])
+
+def singularize(word):
+    vowels = "aeiou"
+
+    if word.endswith("ies"):
+        if word[-4] not in vowels:
+            return word[:-3] + "y"
+
+    if word.endswith("ves"):
+        return word[:-3] + "f"  # fe인 경우도 있음
+
+    if word.endswith("es"):
+        if word[-3] in "sxz":
+            return word[:-2]
+        if word[-4:-2] in ["sh", "ch"]:
+            return word[:-2]
+        if word[-3] == "o" and word[-4] not in vowels:
+            return word[:-2]
+
+    if word.endswith("s"):
+        if word[-2] == "y" and word[-3] in vowels:
+            return word[:-1]
+        return word[:-1]
+
+    return word
 
 endglobal
 
@@ -198,4 +226,35 @@ snippet arr "array" b
 {Array.from({length: $1}).map((_, index) => (
   $0
 ))}
+endsnippet
+
+snippet tbl "table" b
+import { check, pgEnum, pgSchema, pgTable, primaryKey } from "drizzle-orm/pg-core";
+import { bigserial, boolean, integer, jsonb, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+
+export const ${1:`!v expand('%:h:t')`} = pgTable( "${2:`!p snip.rv=snake(t[1])`}", {
+  ${3:`!p snip.rv=singularize(t[2])`_id}: bigserial({ mode: 'number' }).primaryKey(),
+  $0
+  created_at: timestamp().notNull().defaultNow(),
+  updated_at: timestamp().notNull().defaultNow(),
+});
+endsnippet
+
+snippet .fk "foreign key" i
+.references(() => $1.${2:`!p snip.rv=singularize(t[1])`_id}, { onDelete: "${3:cascade}" }),
+endsnippet
+
+snippet enum "pg enum" b
+export const $1 = pgEnum(
+  "${2:`!p snip.rv=snake(t[1])`}",
+  [$0]
+);
+endsnippet
+
+snippet tblchk "table constraint" i
+, (table) => [
+  primaryKey({columns: [table.$1]}),
+  check("$2", sql\`${table.$3} $4\`),$0
+]
 endsnippet

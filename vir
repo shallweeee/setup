@@ -1,6 +1,6 @@
 #! /bin/bash
 
-VV_OPTS="-f -a --spice-shared-dir=Public"
+VV_OPTS="-f -a --spice-shared-dir=Public -K F11=F11"
 IMG_DIR=~/vmm/images
 KEEP=
 
