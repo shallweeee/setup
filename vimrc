@@ -21,6 +21,7 @@ set wildmode=longest,list
 set splitright
 set hls
 set vb t_vb=
+set mouse=
 set grepprg=grep\ --exclude=tags\ --exclude-dir='.[!.]*'\ --exclude-dir=__pycache__\ -n\ $*\ /dev/null
 set ruler
 
